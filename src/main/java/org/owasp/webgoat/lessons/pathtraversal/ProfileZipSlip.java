@@ -1,5 +1,6 @@
 package org.owasp.webgoat.lessons.pathtraversal;
 
+import io.github.pixee.security.Filenames;
 import static org.owasp.webgoat.container.assignments.AttackResultBuilder.failed;
 import static org.owasp.webgoat.container.assignments.AttackResultBuilder.success;
 import static org.springframework.http.MediaType.ALL_VALUE;
@@ -51,7 +52,7 @@ public class ProfileZipSlip extends ProfileUploadBase {
   @ResponseBody
   public AttackResult uploadFileHandler(
       @RequestParam("uploadedFileZipSlip") MultipartFile file, @CurrentUsername String username) {
-    if (!file.getOriginalFilename().toLowerCase().endsWith(".zip")) {
+    if (!Filenames.toSimpleFileName(file.getOriginalFilename()).toLowerCase().endsWith(".zip")) {
       return failed(this).feedback("path-traversal-zip-slip.no-zip").build();
     } else {
       return processZipUpload(file, username);
@@ -65,7 +66,7 @@ public class ProfileZipSlip extends ProfileUploadBase {
     var currentImage = getProfilePictureAsBase64(username);
 
     try {
-      var uploadedZipFile = tmpZipDirectory.resolve(file.getOriginalFilename());
+      var uploadedZipFile = tmpZipDirectory.resolve(Filenames.toSimpleFileName(file.getOriginalFilename()));
       FileCopyUtils.copy(file.getBytes(), uploadedZipFile.toFile());
 
       ZipFile zip = new ZipFile(uploadedZipFile.toFile());
