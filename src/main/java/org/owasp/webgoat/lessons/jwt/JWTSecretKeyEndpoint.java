@@ -22,6 +22,7 @@
 
 package org.owasp.webgoat.lessons.jwt;
 
+import java.security.SecureRandom;
 import static org.owasp.webgoat.container.assignments.AttackResultBuilder.failed;
 import static org.owasp.webgoat.container.assignments.AttackResultBuilder.success;
 
@@ -53,7 +54,7 @@ public class JWTSecretKeyEndpoint implements AssignmentEndpoint {
     "victory", "business", "available", "shipping", "washington"
   };
   public static final String JWT_SECRET =
-      TextCodec.BASE64.encode(SECRETS[new Random().nextInt(SECRETS.length)]);
+      TextCodec.BASE64.encode(SECRETS[new SecureRandom().nextInt(SECRETS.length)]);
   private static final String WEBGOAT_USER = "WebGoat";
   private static final List<String> expectedClaims =
       List.of("iss", "iat", "exp", "aud", "sub", "username", "Email", "Role");
